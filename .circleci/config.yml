@@ -2,8 +2,7 @@ version: 2.1
 jobs:
   build-test:
     docker:
-      # It's recommended to use a supported Node.js version. Here, we're upgrading to Node.js 18.
-      - image: circleci/node:16
+      - image: circleci/node:14
     
     steps:
       - checkout
