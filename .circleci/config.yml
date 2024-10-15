@@ -34,6 +34,11 @@ jobs:
       - run:
           name: npm Audit for Critical Vulnerabilities
           command: npm audit --audit-level=critical
+
+      # Run ESLint to verify code style and catch linting errors
+      - run:
+          name: Run ESLint
+          command: npm run lint
       
       # Save cached dependencies and npm packages
       - save_cache:
