@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Run ESLint
           command: |
-            npm run lint || echo "Linting errors detected, but continuing with the build."
+            npm run lint -- --fix || echo "Some linting issues were auto-fixed."
       
       # Save cached dependencies and npm packages
       - save_cache:
