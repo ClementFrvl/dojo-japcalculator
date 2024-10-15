@@ -28,7 +28,10 @@ type ClassNames =
   | "itemContainer"
   | "buttonContainer"
   | "lateralBar"
-  | "barSpacer";
+  | "barSpacer"
+  | "resetButton"
+  | "sendButton"; // Added for Send Data button styling
+
 interface OwnProps {
   classes: Record<ClassNames, string>;
 }
@@ -51,9 +54,17 @@ export const CalculatorPage: React.FC<Props> = (props: Props) => {
     });
   };
 
+  const handleReset = () => {
+    setValues({});
+  };
+
   const result = Object.keys(values).reduce((acc: number, itemName: string) => {
     return acc + values[itemName].kcal;
   }, 0);
+
+  const handleSendData = () => {
+    sendData(result);
+  };
 
   return (
     <div className={classes.container}>
@@ -78,8 +89,21 @@ export const CalculatorPage: React.FC<Props> = (props: Props) => {
             </div>
           </div>
           <div className={classes.buttonContainer}>
-            <Button variant="contained" onClick={sendData(result)}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSendData}
+              className={classes.sendButton} // Correctly defined
+            >
               {result} Kcal
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleReset}
+              className={classes.resetButton}
+            >
+              Reset
             </Button>
           </div>
         </div>
@@ -180,6 +204,7 @@ const styles = (theme: CustomTheme): Record<ClassNames, CSSProperties> => ({
   buttonContainer: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center", // Ensures buttons are vertically centered
     minHeight: 36,
     flex: 1,
     marginBottom: theme.spacing(3),
@@ -195,6 +220,31 @@ const styles = (theme: CustomTheme): Record<ClassNames, CSSProperties> => ({
     width: 0,
     border: "1px solid black",
     margin: 10,
+  },
+  resetButton: {
+    marginLeft: theme.spacing(2),
+    padding: theme.spacing(1, 3), 
+    fontSize: "1rem", 
+    borderColor: theme.palette.secondary.main, 
+    color: theme.palette.secondary.main, 
+    transition: "background-color 0.3s, color 0.3s", 
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.light, 
+      color: theme.palette.secondary.dark, 
+      borderColor: theme.palette.secondary.dark, 
+    },
+  },
+  sendButton: {
+    marginRight: theme.spacing(2),
+    padding: theme.spacing(1, 3),
+    fontSize: "1rem",
+    backgroundColor: theme.palette.primary.main, 
+    color: "#ffffff",
+    transition: "background-color 0.3s, color 0.3s", 
+    "&:hover": {
+      backgroundColor: theme.palette.primary.dark, 
+      color: "#fff",
+    },
   },
 });
 
