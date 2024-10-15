@@ -29,8 +29,9 @@ jobs:
       - run:
           name: npm Audit Fix
           command: npm audit fix
+          continue_on_error: true
       
-      # Audit for critical vulnerabilities only
+      # Fail the build if there are critical vulnerabilities
       - run:
           name: npm Audit for Critical Vulnerabilities
           command: npm audit --audit-level=critical
