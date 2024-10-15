@@ -2,37 +2,59 @@ version: 2.1
 jobs:
   build-test:
     docker:
-      - image: circleci/node:14
+      # It's recommended to use a supported Node.js version. Here, we're upgrading to Node.js 18.
+      - image: circleci/node:18
     
     steps:
       - checkout
 
+      # Restore cached dependencies based on package-lock.json
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            # Fallback to the latest cache if no exact match is found
             - v1-dependencies-
-    
+      
+      # Restore cached npm packages
+      - restore_cache:
+          keys:
+            - v1-npm-cache-{{ checksum "package-lock.json" }}
+            - v1-npm-cache-
+      
+      # Install dependencies
       - run:
           name: Install Dependencies
           command: npm install
-    
+      
+      # Automatically fix vulnerabilities where possible
       - run:
           name: npm Audit Fix
           command: npm audit fix
-
+      
+      # Audit for critical vulnerabilities only
       - run:
           name: npm Audit for Critical Vulnerabilities
           command: npm audit --audit-level=critical
       
+      # Save cached dependencies and npm packages
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-    
+            - ~/.npm
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+      
+      # Save npm cache separately
+      - save_cache:
+          paths:
+            - ~/.npm
+          key: v1-npm-cache-{{ checksum "package-lock.json" }}
+      
+      # Run tests
       - run:
           name: Run Tests
           command: npm run test
-    
+      
+      # Build the project
       - run:
           name: Build Project
           command: npm run build
