@@ -28,8 +28,9 @@ jobs:
       # Automatically fix vulnerabilities where possible
       - run:
           name: npm Audit Fix
-          command: npm audit fix
-          continue_on_error: true
+          command: |
+            npm audit fix || echo "Some vulnerabilities could not be fixed without breaking changes."
+
       
       # Fail the build if there are critical vulnerabilities
       - run:
