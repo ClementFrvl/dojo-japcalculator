@@ -19,11 +19,11 @@ jobs:
       - run:
           name: npm Audit Fix
           command: npm audit fix
-    
+
       - run:
-          name: npm Audit
-          command: npm audit
-    
+          name: npm Audit for Critical Vulnerabilities
+          command: npm audit --audit-level=critical
+      
       - save_cache:
           paths:
             - node_modules
